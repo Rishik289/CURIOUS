@@ -5,132 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Curious • Grade 7 Science Hub</title>
   <style>
-    :root {
-      --primary-blue: #1055a4;
-      --hover-blue: #0a4385;
-      --bg-gray: #f8f9fa;
-      --card-border: #e9ecef;
-      --text-main: #212529;
-      --text-muted: #6c757d;
-      --green-done: #2b8a3e;
-    }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-gray); color: var(--text-main); margin: 0; padding: 0; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-    .view-section { display: none; }
-    .view-section.active { display: block; }
-    
-    /* --- Login Window UI Layout --- */
-    .login-box { background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 40px; max-width: 400px; margin: 80px auto; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-    .login-box h2 { margin: 0 0 8px 0; font-weight: 800; }
-    .login-box input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ced4da; border-radius: 6px; font-size: 15px; box-sizing: border-box; margin: 16px 0; text-align: center; }
-    
-    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; }
-    h1 { font-size: 32px; font-weight: 800; margin: 0 0 6px 0; }
-    .subtitle { color: var(--text-muted); font-size: 16px; margin: 0; }
-    .user-profile-badge { font-size: 13px; font-weight: 700; color: var(--primary-blue); background: #e6f0fa; padding: 6px 12px; border-radius: 20px; margin-bottom: 10px; display: inline-block; }
-    
-    .chapters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
-    .chapter-card { background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
-    .chapter-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
-    .badge { color: var(--primary-blue); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
-    .card-title { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
-    .card-desc { font-size: 14px; color: #495057; margin: 0 0 20px 0; line-height: 1.5; }
-    .status-box { border-top: 1px solid #f1f3f5; padding-top: 14px; margin-bottom: 18px; font-size: 13px; color: var(--text-muted); }
-    
-    .btn { background-color: var(--primary-blue); color: #ffffff; border: none; border-radius: 6px; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: block; text-align: center; }
-    .btn:hover { background-color: var(--hover-blue); }
-    .btn-secondary { background-color: #ffffff; color: var(--primary-blue); border: 1px solid var(--primary-blue); width: auto; }
-    .nav-tabs { display: flex; gap: 12px; margin: 24px 0; }
-    .tab-btn { padding: 10px 18px; border: 1px solid var(--card-border); background: white; border-radius: 6px; font-size: 14px; cursor: pointer; color: var(--text-main); }
-    .tab-btn.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
-    .tab-content { display: none; background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; }
-    .tab-content.active { display: block; }
-    textarea.typeable-notes { width: 100%; height: 200px; padding: 16px; border: 2px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 15px; line-height: 1.6; }
-    textarea.typeable-notes:focus { border-color: var(--primary-blue); outline: none; }
-    input[type="date"] { padding: 10px; border: 1px solid var(--card-border); border-radius: 6px; font-family: inherit; }
-    .calendar-container { background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; margin-top: 20px; }
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; }
-    .calendar-day-label { text-align: center; font-weight: 700; font-size: 12px; color: var(--text-muted); }
-    .calendar-cell { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; min-height: 80px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; }
-    .calendar-cell .day-num { font-weight: 700; font-size: 14px; }
-    .calendar-event-tag { font-size: 10px; padding: 2px 4px; border-radius: 4px; font-weight: 600; margin-top: 4px; background: #fff0f6; color: #d6336c; border: 1px solid #ffdeeb; }
+    :root { --blue:#1055a4; --hover:#0a4385; --bg:#f8f9fa; --border:#e9ecef; --text:#212529; --muted:#6c757d; --green:#2b8a3e; }
+    * { box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); margin:0; }
+    .container { max-width:1100px; margin:0 auto; padding:40px 20px; }
+    .view-section { display:none; } .view-section.active { display:block; }
+    .login-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:36px; max-width:430px; margin:50px auto; text-align:center; box-shadow:0 4px 12px #0000000a; }
+    .login-box input { width:100%; padding:12px; border:2px solid #ced4da; border-radius:6px; font-size:15px; margin:8px 0; }
+    .login-box label { display:block; text-align:left; font-size:14px; font-weight:600; margin-top:10px; }
+    .btn { background:var(--blue); color:white; border:0; border-radius:6px; padding:12px 20px; font-size:14px; font-weight:600; cursor:pointer; }
+    .btn:hover { background:var(--hover); } .login-box .btn { display:block; width:100%; margin-top:12px; }
+    .btn-secondary { background:white; color:var(--blue); border:1px solid var(--blue); }
+    .dashboard-header { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:40px; border-bottom:1px solid var(--border); padding-bottom:20px; }
+    h1 { font-size:32px; font-weight:800; margin:0 0 6px; } .subtitle { color:var(--muted); font-size:16px; margin:0; }
+    .user-profile-badge { font-size:13px; font-weight:700; color:var(--blue); background:#e6f0fa; padding:6px 12px; border-radius:20px; margin-bottom:10px; display:inline-block; }
+    .chapters-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; }
+    .chapter-card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:24px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 4px 12px #00000008; }
+    .chapter-card:hover { transform:translateY(-3px); } .badge { color:var(--blue); font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:10px; display:inline-block; }
+    .card-title { font-size:18px; margin:0 0 10px; } .card-desc { font-size:14px; color:#495057; margin:0 0 20px; line-height:1.5; }
+    .status-box { border-top:1px solid #f1f3f5; padding-top:14px; margin-bottom:18px; font-size:13px; color:var(--muted); }
+    .nav-tabs { display:flex; flex-wrap:wrap; gap:12px; margin:24px 0; } .tab-btn { padding:10px 18px; border:1px solid var(--border); background:white; border-radius:6px; cursor:pointer; }
+    .tab-btn.active { background:var(--blue); color:white; } .tab-content { display:none; background:white; border:1px solid var(--border); border-radius:12px; padding:30px; }
+    .tab-content.active { display:block; } textarea.typeable-notes { width:100%; height:200px; padding:16px; border:2px solid #ced4da; border-radius:8px; font:15px inherit; }
+    input[type=date] { padding:10px; border:1px solid var(--border); border-radius:6px; } .calendar-container { background:white; border:1px solid var(--border); border-radius:12px; padding:24px; margin-top:20px; }
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:16px; } .calendar-day-label { text-align:center; font-weight:700; font-size:12px; color:var(--muted); }
+    .calendar-cell { background:var(--bg); border:1px solid var(--border); border-radius:6px; min-height:80px; padding:6px; display:flex; flex-direction:column; justify-content:space-between; }
+    .calendar-event-tag { font-size:10px; padding:2px 4px; border-radius:4px; margin-top:4px; background:#fff0f6; color:#d6336c; }
+    #authMessage { min-height:1.4em; color:#b02a37; font-size:14px; } .auth-note { font-size:12px; color:var(--muted); margin-top:16px; line-height:1.5; }
+    @media(max-width:700px) { .dashboard-header { align-items:flex-start; flex-direction:column; } .container { padding:24px 14px; } .login-box { padding:26px 20px; } }
   </style>
 </head>
 <body>
   <div class="container">
-    
-    <!-- 🔑 GATEWAY VIEW: USER SIGN-IN PANEL -->
     <div id="loginView" class="view-section active">
       <div class="login-box">
-        <h2>Science Hub Entrance</h2>
-        <p style="color:var(--text-muted); font-size:14px; margin:0;">Enter a username to unlock your personalized notebooks.</p>
-        <input type="text" id="usernameInput" placeholder="Type name (e.g., student7)">
-        <button id="enterDashboardBtn" class="btn" type="button">Enter Dashboard →</button>
+        <h2 style="margin:0 0 8px;font-weight:800;">Science Hub Entrance</h2>
+        <p style="color:var(--muted);font-size:14px;margin:0 0 18px;">Sign in to access your personalized science notebooks.</p>
+        <label for="usernameInput">Username</label>
+        <input type="text" id="usernameInput" autocomplete="username" placeholder="Choose or enter your username" minlength="2" maxlength="32">
+        <label for="emailInput">Email</label>
+        <input type="email" id="emailInput" autocomplete="email" placeholder="you@example.com">
+        <label for="passwordInput">Password</label>
+        <input type="password" id="passwordInput" autocomplete="current-password" placeholder="At least 6 characters">
+        <button id="enterDashboardBtn" class="btn" type="button">Sign in with email</button>
+        <button id="toggleAuthModeBtn" class="btn btn-secondary" type="button">Create an account</button>
+        <div style="margin:14px 0;color:var(--muted);font-size:13px;">or</div>
+        <button id="googleSignInBtn" class="btn btn-secondary" type="button">Continue with Google</button>
+        <p id="authMessage" role="status" aria-live="polite"></p>
+        <p class="auth-note">Your username is linked to your authenticated account. Use the same username each time you sign in. Your password is handled by Firebase Authentication and is not stored by this website.</p>
       </div>
     </div>
-    
-    <!-- DASHBOARD VIEW -->
+
     <div id="dashboardView" class="view-section">
       <div class="dashboard-header">
-        <div>
-          <span id="welcomeUserBadge" class="user-profile-badge"></span>
-          <h1>A clearer understanding.</h1>
-          <p class="subtitle">Your 7th Grade Science Curiosity study dashboard.</p>
-        </div>
-        <div>
-          <button class="btn btn-secondary" style="display:inline-block; margin-right:8px;" onclick="openGlobalCalendar()">📅 Central Calendar</button>
-          <button class="btn btn-secondary" style="display:inline-block; border-color:#dc3545; color:#dc3545;" onclick="handleUserLogout()">🚪 Logout</button>
-        </div>
+        <div><span id="welcomeUserBadge" class="user-profile-badge"></span><h1>A clearer understanding.</h1><p class="subtitle">Your 7th Grade Science Curiosity study dashboard.</p></div>
+        <div><button class="btn btn-secondary" style="display:inline-block;margin-right:8px;" onclick="openGlobalCalendar()">📅 Central Calendar</button><button class="btn btn-secondary" style="display:inline-block;" onclick="handleUserLogout()">🚪 Logout</button></div>
       </div>
       <div class="chapters-grid" id="chaptersGrid"></div>
     </div>
 
-    <!-- CHAPTER DETAILS VIEW -->
     <div id="chapterView" class="view-section">
-      <button class="btn btn-secondary" style="margin-bottom: 20px;" onclick="showDashboard()">← Back to Dashboard</button>
-      <h2 id="activeChapterTitle"></h2>
-      <span id="activeChapterBadge" class="badge"></span>
+      <button class="btn btn-secondary" style="margin-bottom:20px;" onclick="showDashboard()">← Back to Dashboard</button>
+      <h2 id="activeChapterTitle"></h2><span id="activeChapterBadge" class="badge"></span>
       <div class="nav-tabs">
         <button id="btn-tab-read" class="tab-btn active" onclick="switchTab('read')">01 · Read Essentials</button>
         <button id="btn-tab-notes" class="tab-btn" onclick="switchTab('notes')">02 · My Typeable Notes</button>
         <button id="btn-tab-calendar" class="tab-btn" onclick="switchTab('calendar')">03 · Tracking Settings</button>
       </div>
-      <div id="tab-read" class="tab-content active">
-        <h3>Chapter Reading Summary</h3>
-        <p id="readingText" style="line-height: 1.7; color: #333; font-size: 16px; white-space: pre-wrap;"></p>
-      </div>
-      <div id="tab-notes" class="tab-content">
-        <h3>My Study Canvas</h3>
-        <p class="subtitle">Click inside the white box below to start typing your custom revision notes!</p>
-        <textarea id="notesInput" class="typeable-notes" placeholder="Click here and start typing your notes out..."></textarea>
-        <br><br>
-        <button class="btn" style="background-color: var(--green-done); width: auto;" onclick="saveNotesData()">💾 Save Notes to Browser</button>
-      </div>
-      <div id="tab-calendar" class="tab-content">
-        <h3>Track Assessment Target</h3>
-        <p class="subtitle">Configure dates to plot them onto the master calendar layout grid.</p>
-        <input type="date" id="dateInput">
-        <br><br>
-        <button class="btn" style="width: auto; display: inline-block;" onclick="saveAssessmentDate()">Save Quiz Date</button>
-        <button class="btn btn-secondary" style="display: inline-block; margin-left: 10px;" onclick="logRevisionSession()">✅ Log Revision Today</button>
-      </div>
+      <div id="tab-read" class="tab-content active"><h3>Chapter Reading Summary</h3><p id="readingText" style="line-height:1.7;color:#333;font-size:16px;white-space:pre-wrap;"></p></div>
+      <div id="tab-notes" class="tab-content"><h3>My Study Canvas</h3><p class="subtitle">Click inside the white box below to start typing your custom revision notes!</p><textarea id="notesInput" class="typeable-notes" placeholder="Click here and start typing your notes out..."></textarea><br><br><button class="btn" style="background:var(--green);width:auto;" onclick="saveNotesData()">💾 Save Notes to Browser</button></div>
+      <div id="tab-calendar" class="tab-content"><h3>Track Assessment Target</h3><p class="subtitle">Configure dates to plot them onto the master calendar layout grid.</p><input type="date" id="dateInput"><br><br><button class="btn" style="width:auto;display:inline-block;" onclick="saveAssessmentDate()">Save Quiz Date</button><button class="btn btn-secondary" style="display:inline-block;margin-left:10px;" onclick="logRevisionSession()">✅ Log Revision Today</button></div>
     </div>
 
-    <!-- CALENDAR VIEW -->
-    <div id="calendarView" class="view-section">
-      <button class="btn btn-secondary" style="margin-bottom: 20px;" onclick="showDashboard()">← Back to Dashboard</button>
-      <h2>Grade 7 Science Master Calendar</h2>
-      <p class="subtitle">Interactive calendar layout mapping your saved assessment deadlines.</p>
-      <div class="calendar-container">
-        <h3 style="text-align:center; color:var(--primary-blue); margin-top:0;">November 2026</h3>
-        <div class="calendar-grid" id="calendarGridVisual"></div>
-      </div>
-    </div>
-
+    <div id="calendarView" class="view-section"><button class="btn btn-secondary" style="margin-bottom:20px;" onclick="showDashboard()">← Back to Dashboard</button><h2>Grade 7 Science Master Calendar</h2><p class="subtitle">Interactive calendar layout mapping your saved assessment deadlines.</p><div class="calendar-container"><h3 style="text-align:center;color:var(--blue);margin-top:0;">November 2026</h3><div class="calendar-grid" id="calendarGridVisual"></div></div></div>
   </div>
   <script src="app.js"></script>
+  <script type="module" src="firebase-auth.js"></script>
 </body>
 </html>
-
-
-
