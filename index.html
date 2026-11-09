@@ -20,7 +20,8 @@
     .view-section.active { display: block; }
     
     /* --- Login Window UI Layout --- */
-    .login-box { background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 40px; max-width: 400px; margin: 80px auto; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .login-box { background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 40px; max-width: 400px; margin: 80px auto; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .login-box h2 { margin: 0 0 8px 0; font-weight: 800; }
     .login-box input[type="text"] { width: 100%; padding: 12px; border: 2px solid #ced4da; border-radius: 6px; font-size: 15px; box-sizing: border-box; margin: 16px 0; text-align: center; }
     
     .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--card-border); padding-bottom: 20px; }
@@ -29,14 +30,14 @@
     .user-profile-badge { font-size: 13px; font-weight: 700; color: var(--primary-blue); background: #e6f0fa; padding: 6px 12px; border-radius: 20px; margin-bottom: 10px; display: inline-block; }
     
     .chapters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
-    .chapter-card { background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.01); transition: transform 0.2s; }
+    .chapter-card { background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     .chapter-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.04); }
     .badge { color: var(--primary-blue); font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
     .card-title { font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
     .card-desc { font-size: 14px; color: #495057; margin: 0 0 20px 0; line-height: 1.5; }
     .status-box { border-top: 1px solid #f1f3f5; padding-top: 14px; margin-bottom: 18px; font-size: 13px; color: var(--text-muted); }
     
-    .btn { background-color: var(--primary-blue); color: #ffffff; border: none; border-radius: 6px; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: block; text-align: center; width: 100%; box-sizing: border-box; }
+    .btn { background-color: var(--primary-blue); color: #ffffff; border: none; border-radius: 6px; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: block; text-align: center; }
     .btn:hover { background-color: var(--hover-blue); }
     .btn-secondary { background-color: #ffffff; color: var(--primary-blue); border: 1px solid var(--primary-blue); width: auto; }
     .nav-tabs { display: flex; gap: 12px; margin: 24px 0; }
@@ -44,7 +45,7 @@
     .tab-btn.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
     .tab-content { display: none; background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; }
     .tab-content.active { display: block; }
-    textarea.typeable-notes { width: 100%; height: 200px; padding: 16px; border: 2px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 15px; line-height: 1.6; background-color: #fff; color: #212529; resize: vertical; }
+    textarea.typeable-notes { width: 100%; height: 200px; padding: 16px; border: 2px solid #ced4da; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 15px; line-height: 1.6; }
     textarea.typeable-notes:focus { border-color: var(--primary-blue); outline: none; }
     input[type="date"] { padding: 10px; border: 1px solid var(--card-border); border-radius: 6px; font-family: inherit; }
     .calendar-container { background: white; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; margin-top: 20px; }
@@ -52,7 +53,7 @@
     .calendar-day-label { text-align: center; font-weight: 700; font-size: 12px; color: var(--text-muted); }
     .calendar-cell { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; min-height: 80px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; }
     .calendar-cell .day-num { font-weight: 700; font-size: 14px; }
-    .calendar-event-tag { font-size: 10px; padding: 2px 4px; border-radius: 4px; font-weight: 600; margin-top: 4px; background: #fff0f6; color: #d6336c; border: 1px solid #ffdeeb; text-overflow: ellipsis; overflow: hidden; }
+    .calendar-event-tag { font-size: 10px; padding: 2px 4px; border-radius: 4px; font-weight: 600; margin-top: 4px; background: #fff0f6; color: #d6336c; border: 1px solid #ffdeeb; }
   </style>
 </head>
 <body>
@@ -61,10 +62,10 @@
     <!-- 🔑 GATEWAY VIEW: USER SIGN-IN PANEL -->
     <div id="loginView" class="view-section active">
       <div class="login-box">
-        <h2 style="margin:0 0 8px 0; font-weight:800;">Science Hub Entrance</h2>
+        <h2>Science Hub Entrance</h2>
         <p style="color:var(--text-muted); font-size:14px; margin:0;">Enter a username to unlock your personalized notebooks.</p>
         <input type="text" id="usernameInput" placeholder="Type name (e.g., student7)">
-        <button class="btn" onclick="handleUserLogin()">Enter Dashboard →</button>
+        <button id="enterDashboardBtn" class="btn" type="button">Enter Dashboard →</button>
       </div>
     </div>
     
@@ -130,5 +131,6 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
