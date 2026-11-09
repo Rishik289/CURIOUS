@@ -1,5 +1,5 @@
 // Firebase Authentication for ScienceStudyHub.
-// Replace the placeholder values below with the Firebase web app config.
+// This config is the public web-app config from Firebase; never put service-account keys here.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import {
   getAuth,
@@ -12,22 +12,18 @@ import {
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBQyU4Q5679Pr3HmM2ZJ_oy_Wp_im877Co",
+  authDomain: "curious-e784a.firebaseapp.com",
+  projectId: "curious-e784a",
+  storageBucket: "curious-e784a.firebasestorage.app",
+  messagingSenderId: "1066168674300",
+  appId: "1:1066168674300:web:151fa34271aaae125f3479",
+  measurementId: "G-9MRTJ0VMD2"
 };
 
-const configured = Object.values(firebaseConfig).every(value => value && !value.startsWith("YOUR_"));
-let auth;
-let db;
-if (configured) {
-  const app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 let isSignUpMode = false;
 const normalizeUsername = value => value.trim().toLowerCase();
@@ -83,7 +79,6 @@ async function handleEmailAuth() {
   showMessage("");
   setBusy(true);
   try {
-    if (!configured) throw new Error("Authentication is not configured yet. Add your Firebase web app config in firebase-auth.js, then enable Email/Password and Google sign-in in Firebase Console.");
     const { username, email, password } = validateInputs();
     const credential = isSignUpMode
       ? await createUserWithEmailAndPassword(auth, email, password)
@@ -100,7 +95,6 @@ async function handleGoogleAuth() {
   showMessage("");
   setBusy(true);
   try {
-    if (!configured) throw new Error("Authentication is not configured yet. Add your Firebase web app config in firebase-auth.js, then enable Google sign-in in Firebase Console.");
     const username = normalizeUsername(document.getElementById("usernameInput").value);
     if (username.length < 2 || username.length > 32 || !/^[a-z0-9._-]+$/.test(username)) {
       throw new Error("Enter a username (2–32 letters, numbers, dots, underscores, or hyphens) before continuing with Google.");
@@ -115,7 +109,7 @@ async function handleGoogleAuth() {
 }
 
 function handleLogout() {
-  if (auth) signOut(auth).catch(error => console.error("Firebase sign-out failed:", error));
+  signOut(auth).catch(error => console.error("Firebase sign-out failed:", error));
   localStorage.removeItem("current_active_user");
   window.activeUser = "";
   document.querySelectorAll(".view-section").forEach(view => view.classList.remove("active"));
@@ -145,7 +139,6 @@ function initializeLogin() {
   });
 
   window.handleUserLogout = handleLogout;
-  if (!configured) showMessage("Setup needed: add Firebase config and enable the sign-in providers. See the repository setup notes.");
-}
+};
 
 window.onload = initializeLogin;
