@@ -3,10 +3,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
 import {
   getAuth,
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
   signOut
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
@@ -27,6 +25,15 @@ const db = getFirestore(app);
 
 let isSignUpMode = false;
 const normalizeUsername = value => value.trim().toLowerCase();
+const studentsByClass = {
+  "VII-F": [
+    "Aaravjit", "Aarohi", "Aaron", "Advit", "Adwitya", "Amyra", "Aryan", "Ayan",
+    "Bhuvi", "Damyanti", "Devesh", "Hridhaan", "Iqsha", "Jhanvi", "Jivansh", "Kaira",
+    "Kritnoor", "Myra", "Naitik", "Navya", "Nikunj", "Pranika", "Palak", "Riaan",
+    "Rishab", "Rishik", "Ritisha", "Sanaya", "Shaan", "Suhani", "Srishti", "Urba",
+    "Vibodh", "Vivaan", "Yuvaan", "Zoya"
+  ]
+};
 
 function showMessage(message, isError = true) {
   const target = document.getElementById("authMessage");
@@ -36,41 +43,83 @@ function showMessage(message, isError = true) {
 }
 
 function setBusy(busy) {
-  ["enterDashboardBtn", "toggleAuthModeBtn", "googleSignInBtn"].forEach(id => {
+  ["enterDashboardBtn", "toggleAuthModeBtn"].forEach(id => {
     const button = document.getElementById(id);
     if (button) button.disabled = busy;
   });
+}
+
+function updateRoleOptions() {
+  const className = document.getElementById("classSelect").value;
+  const roleSelect = document.getElementById("roleNoSelect");
+  roleSelect.replaceChildren(new Option("Select role no.", ""));
+
+  const students = studentsByClass[className];
+  roleSelect.disabled = !students;
+  if (!students) {
+    showMessage(className ? `Role numbers for ${className} are not available yet. Please select VII-F for now.` : "");
+    return;
+  }
+
+  students.forEach((name, index) => {
+    roleSelect.add(new Option(`${index + 1} — ${name}`, String(index + 1)));
+  });
+  showMessage("");
 }
 
 function validateInputs() {
   const username = normalizeUsername(document.getElementById("usernameInput").value);
   const email = document.getElementById("emailInput").value.trim();
   const password = document.getElementById("passwordInput").value;
+  const className = document.getElementById("classSelect").value;
+  const roleNo = document.getElementById("roleNoSelect").value;
   if (username.length < 2 || username.length > 32) throw new Error("Choose a username between 2 and 32 characters.");
   if (!/^[a-z0-9._-]+$/.test(username)) throw new Error("Username can use lowercase letters, numbers, dots, underscores, and hyphens.");
   if (!email) throw new Error("Enter your email address.");
   if (!password) throw new Error("Enter your password.");
   if (isSignUpMode && password.length < 6) throw new Error("Password must be at least 6 characters.");
-  return { username, email, password };
+  if (!className) throw new Error("Select your class.");
+  const students = studentsByClass[className];
+  if (!students) throw new Error(`Role numbers for ${className} are not available yet. Please select VII-F for now.`);
+  if (!roleNo || !students[Number(roleNo) - 1]) throw new Error("Select your role number.");
+  return { username, email, password, className, roleNo, studentName: students[Number(roleNo) - 1] };
 }
 
-async function verifyUsername(user, enteredUsername) {
+async function verifyUsername(user, enteredUsername, student) {
   const profileRef = doc(db, "userProfiles", user.uid);
   const profile = await getDoc(profileRef);
+  const studentProfile = {
+    className: student.className,
+    roleNo: student.roleNo,
+    studentName: student.studentName
+  };
+
   if (profile.exists()) {
-    const savedUsername = normalizeUsername(profile.data().username || "");
+    const savedProfile = profile.data();
+    const savedUsername = normalizeUsername(savedProfile.username || "");
     if (savedUsername !== enteredUsername) {
       await signOut(auth);
       throw new Error("That username does not match this account. Check it and try again.");
     }
+    if (savedProfile.className && (savedProfile.className !== student.className || String(savedProfile.roleNo) !== student.roleNo)) {
+      await signOut(auth);
+      throw new Error("The selected class and role number do not match this account.");
+    }
+    if (!savedProfile.className) {
+      await setDoc(profileRef, studentProfile, { merge: true });
+    }
   } else {
-    // First successful authentication binds this username to the authenticated UID.
-    await setDoc(profileRef, { username: enteredUsername, createdAt: new Date().toISOString() });
+    // First successful authentication binds this username and class roster entry to the authenticated UID.
+    await setDoc(profileRef, {
+      username: enteredUsername,
+      ...studentProfile,
+      createdAt: new Date().toISOString()
+    });
   }
 
   window.activeUser = enteredUsername;
   localStorage.setItem("current_active_user", enteredUsername);
-  document.getElementById("welcomeUserBadge").innerText = "👤 Active Student: " + enteredUsername;
+  document.getElementById("welcomeUserBadge").innerText = `👤 ${student.className} · Role ${student.roleNo}: ${student.studentName}`;
   document.querySelectorAll(".view-section").forEach(view => view.classList.remove("active"));
   window.showDashboard();
 }
@@ -79,30 +128,14 @@ async function handleEmailAuth() {
   showMessage("");
   setBusy(true);
   try {
-    const { username, email, password } = validateInputs();
+    const student = validateInputs();
+    const { username, email, password } = student;
     const credential = isSignUpMode
       ? await createUserWithEmailAndPassword(auth, email, password)
       : await signInWithEmailAndPassword(auth, email, password);
-    await verifyUsername(credential.user, username);
+    await verifyUsername(credential.user, username, student);
   } catch (error) {
     showMessage(error.message || "Could not sign in. Check your details and try again.");
-  } finally {
-    setBusy(false);
-  }
-}
-
-async function handleGoogleAuth() {
-  showMessage("");
-  setBusy(true);
-  try {
-    const username = normalizeUsername(document.getElementById("usernameInput").value);
-    if (username.length < 2 || username.length > 32 || !/^[a-z0-9._-]+$/.test(username)) {
-      throw new Error("Enter a username (2–32 letters, numbers, dots, underscores, or hyphens) before continuing with Google.");
-    }
-    const credential = await signInWithPopup(auth, new GoogleAuthProvider());
-    await verifyUsername(credential.user, username);
-  } catch (error) {
-    showMessage(error.message || "Google sign-in failed. Please try again.");
   } finally {
     setBusy(false);
   }
@@ -125,8 +158,8 @@ function initializeLogin() {
   document.querySelectorAll(".view-section").forEach(view => view.classList.remove("active"));
   document.getElementById("loginView").classList.add("active");
 
+  document.getElementById("classSelect").addEventListener("change", updateRoleOptions);
   document.getElementById("enterDashboardBtn").addEventListener("click", handleEmailAuth);
-  document.getElementById("googleSignInBtn").addEventListener("click", handleGoogleAuth);
   document.getElementById("toggleAuthModeBtn").addEventListener("click", () => {
     isSignUpMode = !isSignUpMode;
     document.getElementById("enterDashboardBtn").textContent = isSignUpMode ? "Create account with email" : "Sign in with email";
@@ -139,6 +172,6 @@ function initializeLogin() {
   });
 
   window.handleUserLogout = handleLogout;
-};
+}
 
 window.onload = initializeLogin;
