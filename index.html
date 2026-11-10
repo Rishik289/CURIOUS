@@ -11,8 +11,7 @@
     .container { max-width:1100px; margin:0 auto; padding:40px 20px; }
     .view-section { display:none; } .view-section.active { display:block; }
     .login-box { background:#fff; border:1px solid var(--border); border-radius:12px; padding:36px; max-width:430px; margin:50px auto; text-align:center; box-shadow:0 4px 12px #0000000a; }
-    .login-box input, .login-box select { width:100%; padding:12px; border:2px solid #ced4da; border-radius:6px; font-size:15px; margin:8px 0; }
-    .login-box label { display:block; text-align:left; font-size:14px; font-weight:600; margin-top:10px; }
+    .login-box input { width:100%; padding:12px; border:2px solid #ced4da; border-radius:6px; font-size:15px; margin:8px 0; }
     .btn { background:var(--blue); color:white; border:0; border-radius:6px; padding:12px 20px; font-size:14px; font-weight:600; cursor:pointer; }
     .btn:hover { background:var(--hover); } .login-box .btn { display:block; width:100%; margin-top:12px; }
     .btn-secondary { background:white; color:var(--blue); border:1px solid var(--blue); }
@@ -31,7 +30,6 @@
     .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:16px; } .calendar-day-label { text-align:center; font-weight:700; font-size:12px; color:var(--muted); }
     .calendar-cell { background:var(--bg); border:1px solid var(--border); border-radius:6px; min-height:80px; padding:6px; display:flex; flex-direction:column; justify-content:space-between; }
     .calendar-event-tag { font-size:10px; padding:2px 4px; border-radius:4px; margin-top:4px; background:#fff0f6; color:#d6336c; }
-    #authMessage { min-height:1.4em; color:#b02a37; font-size:14px; } .auth-note { font-size:12px; color:var(--muted); margin-top:16px; line-height:1.5; }
     @media(max-width:700px) { .dashboard-header { align-items:flex-start; flex-direction:column; } .container { padding:24px 14px; } .login-box { padding:26px 20px; } }
   </style>
 </head>
@@ -39,32 +37,8 @@
   <div class="container">
     <div id="loginView" class="view-section active">
       <div class="login-box">
-        <h2 style="margin:0 0 8px;font-weight:800;">Science Hub Entrance</h2>
-        <p style="color:var(--muted);font-size:14px;margin:0 0 18px;">Sign in to access your personalized science notebooks.</p>
-        <label for="usernameInput">Username</label>
-        <input type="text" id="usernameInput" autocomplete="username" placeholder="Choose or enter your username" minlength="2" maxlength="32">
-        <label for="emailInput">Email</label>
-        <input type="email" id="emailInput" autocomplete="email" placeholder="you@example.com">
-        <label for="passwordInput">Password</label>
-        <input type="password" id="passwordInput" autocomplete="current-password" placeholder="At least 6 characters">
-        <label for="classSelect">Class</label>
-        <select id="classSelect" aria-label="Select class">
-          <option value="">Select class</option>
-          <option value="VII-A">VII-A</option>
-          <option value="VII-B">VII-B</option>
-          <option value="VII-C">VII-C</option>
-          <option value="VII-D">VII-D</option>
-          <option value="VII-E">VII-E</option>
-          <option value="VII-F">VII-F</option>
-        </select>
-        <label for="roleNoSelect">Role No.</label>
-        <select id="roleNoSelect" disabled aria-label="Select role number">
-          <option value="">Select role no.</option>
-        </select>
-        <button id="enterDashboardBtn" class="btn" type="button">Sign in with email</button>
-        <button id="toggleAuthModeBtn" class="btn btn-secondary" type="button">Create an account</button>
-        <p id="authMessage" role="status" aria-live="polite"></p>
-        <p class="auth-note">Your username is linked to your authenticated account. Use the same username each time you sign in. Your password is handled by Firebase Authentication and is not stored by this website.</p>
+        <input type="text" id="usernameInput" autocomplete="username" placeholder="Username" minlength="2" maxlength="32" aria-label="Username">
+        <button id="enterDashboardBtn" class="btn" type="button">Log in</button>
       </div>
     </div>
 
@@ -85,13 +59,12 @@
         <button id="btn-tab-calendar" class="tab-btn" onclick="switchTab('calendar')">03 · Tracking Settings</button>
       </div>
       <div id="tab-read" class="tab-content active"><h3>Chapter Reading Summary</h3><p id="readingText" style="line-height:1.7;color:#333;font-size:16px;white-space:pre-wrap;"></p></div>
-      <div id="tab-notes" class="tab-content"><h3>My Study Canvas</h3><p class="subtitle">Click inside the white box below to start typing your custom revision notes!</p><textarea id="notesInput" class="typeable-notes" placeholder="Start writing your science revision notes here..."></textarea></div>
-      <div id="tab-calendar" class="tab-content"><h3>Track Assessment Target</h3><p class="subtitle">Configure dates to plot them onto the master calendar layout grid.</p><input type="date" id="assessmentDateInput"><button class="btn" style="margin-top:16px;" type="button" onclick="saveAssessmentDate()">Save target assessment date</button></div>
+      <div id="tab-notes" class="tab-content"><h3>My Study Canvas</h3><p class="subtitle">Click inside the white box below to start typing your custom revision notes!</p><textarea id="notesInput" class="typeable-notes" placeholder="Start writing your science revision notes here..."></textarea><button class="btn" style="margin-top:16px;" onclick="saveNotesData()">Save Notes</button><button class="btn btn-secondary" style="margin:16px 0 0 8px;" onclick="logRevisionSession()">Log Revision</button></div>
+      <div id="tab-calendar" class="tab-content"><h3>Track Assessment Target</h3><p class="subtitle">Configure dates to plot them onto the master calendar layout grid.</p><input type="date" id="dateInput"><button class="btn" style="margin-top:16px;" type="button" onclick="saveAssessmentDate()">Save target assessment date</button></div>
     </div>
 
-    <div id="calendarView" class="view-section"><button class="btn btn-secondary" style="margin-bottom:20px;" onclick="showDashboard()">← Back to Dashboard</button><h2>Grade 7 Science Master Calendar</h2><div class="calendar-container"><div id="calendarGrid" class="calendar-grid"></div></div></div>
+    <div id="calendarView" class="view-section"><button class="btn btn-secondary" style="margin-bottom:20px;" onclick="showDashboard()">← Back to Dashboard</button><h2>Grade 7 Science Master Calendar</h2><div class="calendar-container"><div id="calendarGridVisual" class="calendar-grid"></div></div></div>
   </div>
   <script src="app.js"></script>
-  <script type="module" src="firebase-auth.js"></script>
 </body>
 </html>
