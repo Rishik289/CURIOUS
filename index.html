@@ -30,6 +30,11 @@
     .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; margin-top:16px; } .calendar-day-label { text-align:center; font-weight:700; font-size:12px; color:var(--muted); }
     .calendar-cell { background:var(--bg); border:1px solid var(--border); border-radius:6px; min-height:80px; padding:6px; display:flex; flex-direction:column; justify-content:space-between; }
     .calendar-event-tag { font-size:10px; padding:2px 4px; border-radius:4px; margin-top:4px; background:#fff0f6; color:#d6336c; }
+    .concept-clarity { display:inline-flex; align-items:center; gap:7px; padding:6px 10px; border-radius:20px; font-size:12px; font-weight:700; margin:0 0 14px; }
+    .concept-clarity .clarity-dot { width:10px; height:10px; border-radius:50%; background:currentColor; }
+    .quiz-question { margin:18px 0; padding:16px; background:#f8f9fa; border-radius:8px; }
+    .quiz-option { display:block; margin:9px 0; font-size:15px; }
+    .quiz-result { margin-top:16px; font-weight:700; }
     @media(max-width:700px) { .dashboard-header { align-items:flex-start; flex-direction:column; } .container { padding:24px 14px; } .login-box { padding:26px 20px; } }
   </style>
 </head>
@@ -59,12 +64,13 @@
         <button id="btn-tab-calendar" class="tab-btn" onclick="switchTab('calendar')">03 · Tracking Settings</button>
       </div>
       <div id="tab-read" class="tab-content active"><h3>Chapter Reading Summary</h3><p id="readingText" style="line-height:1.7;color:#333;font-size:16px;white-space:pre-wrap;"></p></div>
-      <div id="tab-notes" class="tab-content"><h3>My Study Canvas</h3><p class="subtitle">Click inside the white box below to start typing your custom revision notes!</p><textarea id="notesInput" class="typeable-notes" placeholder="Start writing your science revision notes here..."></textarea><button class="btn" style="margin-top:16px;" onclick="saveNotesData()">Save Notes</button><button class="btn btn-secondary" style="margin:16px 0 0 8px;" onclick="logRevisionSession()">Log Revision</button></div>
+      <div id="tab-notes" class="tab-content"><h3>My Study Canvas</h3><p class="subtitle">Write your revision notes below. Notes are saved for this username in this browser.</p><textarea id="notesInput" class="typeable-notes" placeholder="Start writing your science revision notes here..."></textarea><button class="btn" style="margin-top:16px;" onclick="saveNotesData()">Save Notes</button><button class="btn btn-secondary" style="margin:16px 0 0 8px;" onclick="logRevisionSession()">Log Revision</button></div>
       <div id="tab-calendar" class="tab-content"><h3>Track Assessment Target</h3><p class="subtitle">Configure dates to plot them onto the master calendar layout grid.</p><input type="date" id="dateInput"><button class="btn" style="margin-top:16px;" type="button" onclick="saveAssessmentDate()">Save target assessment date</button></div>
     </div>
 
     <div id="calendarView" class="view-section"><button class="btn btn-secondary" style="margin-bottom:20px;" onclick="showDashboard()">← Back to Dashboard</button><h2>Grade 7 Science Master Calendar</h2><div class="calendar-container"><div id="calendarGridVisual" class="calendar-grid"></div></div></div>
   </div>
   <script src="app.js"></script>
+  <script src="quiz.js"></script>
 </body>
 </html>
